@@ -25,6 +25,8 @@ const serviceAreas = [
   "Faisal Town", "Garden Town", "Township", "Raiwind Road",
 ];
 
+import ContactForm from "@/components/ui/ContactForm";
+
 export default function ContactPage() {
   const schema = buildLocalBusinessSchema({ pageUrl: `${SITE_URL}/contact` });
 
@@ -91,132 +93,7 @@ export default function ContactPage() {
                 <p className="text-gray-600 text-sm mb-7">
                   Fill in the form below and our team will get back to you within 24 hours with a tailored response.
                 </p>
-                <form
-                  action="/api/contact"
-                  method="POST"
-                  aria-label="Contact form for A.H Construction"
-                  className="space-y-5"
-                >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
-                        Full Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        required
-                        autoComplete="name"
-                        placeholder="Muhammad Ahmed"
-                        className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a3c5e]/30 focus:border-[#1a3c5e] transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1.5">
-                        Phone Number <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        required
-                        autoComplete="tel"
-                        placeholder="+92 300 0000000"
-                        className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a3c5e]/30 focus:border-[#1a3c5e] transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      autoComplete="email"
-                      placeholder="you@example.com"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a3c5e]/30 focus:border-[#1a3c5e] transition-colors"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-1.5">
-                        Service Required
-                      </label>
-                      <select
-                        id="service"
-                        name="service"
-                        className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a3c5e]/30 focus:border-[#1a3c5e] transition-colors bg-white"
-                      >
-                        <option value="">Select a service</option>
-                        <option value="new-home-construction">New Home Construction</option>
-                        <option value="commercial-construction">Commercial Construction</option>
-                        <option value="industrial-construction">Industrial Construction</option>
-                        <option value="concrete-structural">Concrete &amp; Structural Work</option>
-                        <option value="renovation">Renovation &amp; Remodeling</option>
-                        <option value="interior-finishing">Interior Finishing</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1.5">
-                        Project Location
-                      </label>
-                      <input
-                        type="text"
-                        id="area"
-                        name="area"
-                        placeholder="DHA Phase 6, Lahore"
-                        className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a3c5e]/30 focus:border-[#1a3c5e] transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Approximate Budget (PKR)
-                    </label>
-                    <select
-                      id="budget"
-                      name="budget"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a3c5e]/30 focus:border-[#1a3c5e] transition-colors bg-white"
-                    >
-                      <option value="">Select a range</option>
-                      <option value="under-50L">Under 50 Lakh</option>
-                      <option value="50L-1Cr">50 Lakh – 1 Crore</option>
-                      <option value="1Cr-3Cr">1 – 3 Crore</option>
-                      <option value="3Cr-5Cr">3 – 5 Crore</option>
-                      <option value="above-5Cr">Above 5 Crore</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Project Details
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={5}
-                      placeholder="Describe your construction project — plot size, number of floors, current stage, timeline requirements..."
-                      className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a3c5e]/30 focus:border-[#1a3c5e] transition-colors resize-none"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto px-10 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors text-sm flex items-center gap-2"
-                  >
-                    Submit Request
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </button>
-                </form>
+                <ContactForm />
               </div>
             </div>
 
