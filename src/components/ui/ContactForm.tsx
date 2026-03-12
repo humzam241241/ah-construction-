@@ -28,7 +28,7 @@ export default function ContactForm() {
         throw new Error("Submission failed");
       }
     } catch {
-      setMessage({ type: "error", text: "Something went wrong. Please call us at +92 314 5500113" });
+      setMessage({ type: "error", text: "Something went wrong. Please call us at 042-35299722 or 0314-5500113." });
     } finally {
       setIsSubmitting(false);
     }
@@ -93,11 +93,12 @@ export default function ContactForm() {
           >
             <option value="">Select a service</option>
             <option value="new-home-construction">New Home Construction</option>
+            <option value="renovation">Renovation & Remodeling</option>
+            <option value="infrastructure-civil">Infrastructure & Civil Work</option>
+            <option value="maintenance-repair">Maintenance & Repair</option>
+            <option value="general-contracting">General Contracting & Management</option>
             <option value="commercial-construction">Commercial Construction</option>
             <option value="industrial-construction">Industrial Construction</option>
-            <option value="concrete-structural">Concrete & Structural Work</option>
-            <option value="renovation">Renovation & Remodeling</option>
-            <option value="interior-finishing">Interior Finishing</option>
             <option value="other">Other</option>
           </select>
         </div>

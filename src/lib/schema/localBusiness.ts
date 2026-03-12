@@ -16,12 +16,11 @@ export function buildLocalBusinessSchema(
     name: "A.H Construction",
     alternateName: "AH Construction Lahore",
     description:
-      "A.H Construction is a leading construction company in Lahore, Pakistan offering home building, concrete work, commercial construction, and renovation services.",
+      "A.H Construction is a construction company in Punjab, Pakistan offering new construction, renovation, infrastructure work, maintenance, and general contracting services.",
     url: SITE_URL,
-    telephone: "+92-314-5500113",
-    email: "info@ahconstruction.pk",
+    telephone: "+92-42-35299722",
+    email: "ahc_786@yahoo.com",
     foundingDate: "2005",
-    priceRange: "$$",
     image: `${SITE_URL}/og-default.jpg`,
     logo: `${SITE_URL}/logo.png`,
     address: {
@@ -45,6 +44,10 @@ export function buildLocalBusinessSchema(
       {
         "@type": "State",
         name: "Punjab",
+      },
+      {
+        "@type": "Country",
+        name: "Pakistan",
       },
     ],
     hasOfferCatalog: {
@@ -109,13 +112,22 @@ export function buildLocalBusinessSchema(
         closes: "16:00",
       },
     ],
-    contactPoint: {
-      "@type": "ContactPoint",
-      telephone: "+92-314-5500113",
-      contactType: "customer service",
-      areaServed: "PK",
-      availableLanguage: ["English", "Urdu"],
-    },
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: "+92-42-35299722",
+        contactType: "customer service",
+        areaServed: "PK",
+        availableLanguage: ["English"],
+      },
+      {
+        "@type": "ContactPoint",
+        telephone: "+92-314-5500113",
+        contactType: "customer service",
+        areaServed: "PK",
+        availableLanguage: ["English"],
+      },
+    ],
     sameAs: [],
     mainEntityOfPage: pageUrl,
   };
@@ -131,7 +143,7 @@ export function buildServiceSchema(serviceName: string, description: string) {
       "@type": "LocalBusiness",
       "@id": `${SITE_URL}/#business`,
       name: "A.H Construction",
-      telephone: "+92-314-5500113",
+      telephone: "+92-42-35299722",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Lahore",
@@ -139,8 +151,8 @@ export function buildServiceSchema(serviceName: string, description: string) {
       },
     },
     areaServed: {
-      "@type": "City",
-      name: "Lahore",
+      "@type": "Country",
+      name: "Pakistan",
     },
     url: SITE_URL,
   };

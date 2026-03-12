@@ -5,7 +5,7 @@ import { buildMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildMetadata({
   title: "About A.H Construction — Lahore's Trusted Builder Since 2005",
   description:
-    "Learn about A.H Construction — Lahore's experienced construction company with 20+ years of delivering homes, commercial buildings, and concrete structures across Punjab.",
+    "Learn about A.H Construction — an experienced construction company delivering residential, commercial, infrastructure, and renovation projects across Punjab and Pakistan.",
   path: "/about",
   keywords: [
     "about AH Construction Lahore",
@@ -43,7 +43,7 @@ const team = [
   {
     name: "Bilal Raza",
     role: "Project Manager",
-    bio: "PMP certified. Manages simultaneous projects across Lahore, ensuring on-time delivery and budget adherence.",
+    bio: "PMP certified. Manages simultaneous projects across Lahore and Punjab, ensuring on-time delivery and quality control.",
   },
 ];
 
@@ -120,10 +120,13 @@ export default function AboutPage() {
                   A.H Construction was founded in 2005 by Ahmad Hassan with a simple mission: deliver construction projects in Lahore that clients are proud to own for generations. Starting with residential work in DHA and Gulberg, we quickly earned a reputation for transparent pricing, reliable timelines, and uncompromising build quality.
                 </p>
                 <p>
-                  Over two decades, we expanded our capabilities to cover commercial buildings, industrial warehouses, concrete structural work, and complete renovation services. Today, our team of 80+ professionals — engineers, architects, site supervisors, and skilled craftsmen — operates simultaneously across Lahore&apos;s most prestigious housing and commercial developments.
+                  Over two decades, we expanded our capabilities to cover commercial buildings, industrial warehouses, concrete structural work, and complete renovation services. Today, our team of 80+ professionals — engineers, architects, site supervisors, and skilled craftsmen — operates across Punjab and other regions of Pakistan.
                 </p>
                 <p>
                   With over 500 completed projects and zero structural defect claims, we are Lahore&apos;s construction company of choice for clients who value quality over shortcuts.
+                </p>
+                <p>
+                  We serve government and semi-government departments, NGOs, banks, private companies, and both residential and commercial clients.
                 </p>
               </div>
             </div>

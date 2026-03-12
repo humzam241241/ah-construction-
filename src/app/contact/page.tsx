@@ -7,7 +7,7 @@ import { buildLocalBusinessSchema } from "@/lib/schema/localBusiness";
 export const metadata: Metadata = buildMetadata({
   title: "Contact A.H Construction — Construction Company in Lahore",
   description:
-    "Get in touch with A.H Construction in Lahore. Call +92 314 5500113 or send a message to get a free quote for home building, concrete work, or commercial construction.",
+    "Get in touch with A.H Construction. Call 042-35299722 or 0314-5500113, or send a message to request a quote for construction, renovation, infrastructure, and maintenance work.",
   path: "/contact",
   keywords: [
     "contact construction company Lahore",
@@ -20,9 +20,14 @@ export const metadata: Metadata = buildMetadata({
 });
 
 const serviceAreas = [
-  "DHA Lahore", "Gulberg", "Bahria Town", "Model Town",
-  "Johar Town", "Cantt", "Wapda Town", "Iqbal Town",
-  "Faisal Town", "Garden Town", "Township", "Raiwind Road",
+  "Lahore",
+  "Islamabad",
+  "Rawalpindi",
+  "Faisalabad",
+  "Multan",
+  "Karachi",
+  "Peshawar",
+  "Punjab (All Major Cities)",
 ];
 
 import ContactForm from "@/components/ui/ContactForm";
@@ -41,7 +46,7 @@ export default function ContactPage() {
       "@type": "LocalBusiness",
       "@id": `${SITE_URL}/#business`,
       name: "A.H Construction",
-      telephone: "+92-314-5500113",
+      telephone: ["+92-42-35299722", "+92-314-5500113"],
       address: {
         "@type": "PostalAddress",
         addressLocality: "Lahore",
@@ -111,9 +116,14 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 mb-0.5">Phone</p>
-                      <a href="tel:+923145500113" className="font-semibold text-[#1a3c5e] hover:text-[#e8a020] transition-colors">
-                        +92 314 5500113
-                      </a>
+                      <div className="space-y-1">
+                        <a href="tel:+924235299722" className="block font-semibold text-[#1a3c5e] hover:text-[#e8a020] transition-colors">
+                          042-35299722
+                        </a>
+                        <a href="tel:+923145500113" className="block font-semibold text-[#1a3c5e] hover:text-[#e8a020] transition-colors">
+                          0314-5500113
+                        </a>
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -124,8 +134,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 mb-0.5">Email</p>
-                      <a href="mailto:info@ahconstruction.pk" className="font-semibold text-[#1a3c5e] hover:text-[#e8a020] transition-colors text-sm">
-                        info@ahconstruction.pk
+                      <a href="mailto:ahc_786@yahoo.com" className="font-semibold text-[#1a3c5e] hover:text-[#e8a020] transition-colors text-sm">
+                        ahc_786@yahoo.com
                       </a>
                     </div>
                   </div>
@@ -169,7 +179,7 @@ export default function ContactPage() {
 
               {/* Service Areas */}
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h2 className="text-lg font-bold text-[#1a3c5e] mb-4">Service Areas in Lahore</h2>
+                <h2 className="text-lg font-bold text-[#1a3c5e] mb-4">Service Areas</h2>
                 <div className="flex flex-wrap gap-2">
                   {serviceAreas.map((area) => (
                     <span key={area} className="text-xs bg-[#1a3c5e]/10 text-[#1a3c5e] px-2.5 py-1 rounded-full font-medium">
@@ -178,7 +188,7 @@ export default function ContactPage() {
                   ))}
                 </div>
                 <p className="text-xs text-gray-500 mt-3">
-                  We serve all areas across Lahore and greater Punjab.
+                  We mainly serve Punjab and also execute projects across Pakistan.
                 </p>
               </div>
             </div>

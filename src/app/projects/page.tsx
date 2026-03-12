@@ -137,6 +137,23 @@ const categoryBannerColors: Record<ProjectCategory, string> = {
   Renovation: "from-purple-900 to-purple-800",
 };
 
+/** Major completed projects — employer, project name, and completion date only (no financial data). */
+const majorCompletedProjects = [
+  { employer: "University of the Punjab", project: "Construction of TWO Examination Halls at First Floor of IAS at QAC", completed: "Nov 19, 2015" },
+  { employer: "University of the Punjab", project: "Construction of Employee Apartments (J-Type) Block H & J at QAC", completed: "Aug 25, 2016" },
+  { employer: "University of Engineering & Technology, Lahore", project: "Balance Work of E & F Type 04 Nos. Units (16 No. Residences) Phase-1 at KSK Campus of UET, Lahore", completed: "14 Dec 2019" },
+  { employer: "PRFTC (Pvt.) Ltd.", project: "Construction of Yousafwala New Railway Station Building", completed: "21 Dec 2018" },
+  { employer: "Punjab Daanish Schools and Centers of Excellence", project: "Establishment of Center of Excellence at Govt. Guru Nanak Boys High School Nankana Sahib", completed: "22 Jul 2019" },
+  { employer: "Infrastructure Development Authority of the Punjab", project: "Construction of Hepatitis Prevention & Treatment Clinic (HPTC) at Existing Building of 04 Tertiary Care Hospitals in Lahore", completed: "23 Jun 2020" },
+  { employer: "University of Gujrat", project: "Construction of Academic Block-2 & Girls Hostel at University of Gujrat Sub Campus Narowal", completed: "29 May 2020" },
+  { employer: "Pakistan Agricultural Storage & Services Corporation Ltd. (PASSCO)", project: "Construction of 3x Godowns at Musa Virk, PASSCO Khanewal Zone", completed: "10 Apr 2021" },
+  { employer: "University of Engineering & Technology, Lahore", project: "Remaining Work for the Addition of First Block in Mechanical, Mechatronics & Manufacturing Engineering Department at New Campus (KSK) of UET, Lahore", completed: "24 Oct 2024" },
+  { employer: "Punjab Daanish Schools and Centers of Excellence", project: "Establishment of Daanish School at Mankera Dist. Bhakkar Package-3 (Girls Campus)", completed: "12 Nov 2024" },
+  { employer: "Punjab Daanish Schools and Centers of Excellence", project: "Establishment of Daanish School at Mankera Dist. Bhakkar Package-2 (Boys Campus)", completed: "30 Dec 2025" },
+  { employer: "Allied Bank Ltd.", project: "ABL Satellite Town, Rahim Yar Khan (0932)", completed: "—" },
+  { employer: "Allied Bank Ltd.", project: "ABL Commercial Market, Farid Town Branch (1202), Region Sahiwal", completed: "—" },
+];
+
 export default function ProjectsPage() {
   const grouped = categories.slice(1).map((cat) => ({
     category: cat,
@@ -228,6 +245,41 @@ export default function ProjectsPage() {
               </div>
             </div>
           ))}
+
+          {/* Major completed projects — institutional & government */}
+          <div>
+            <div className="mb-8">
+              <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-1">Portfolio</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-[#1a3c5e] mb-2">Major Completed Projects</h2>
+              <p className="text-gray-600 max-w-2xl">
+                Selected institutional, government, and commercial projects delivered across Punjab and Pakistan.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="bg-[#1a3c5e] text-white">
+                      <th className="px-4 py-3 font-semibold">#</th>
+                      <th className="px-4 py-3 font-semibold">Employer / Client</th>
+                      <th className="px-4 py-3 font-semibold">Project</th>
+                      <th className="px-4 py-3 font-semibold whitespace-nowrap">Completion Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {majorCompletedProjects.map((row, i) => (
+                      <tr key={i} className="border-b border-gray-100 hover:bg-gray-50/80">
+                        <td className="px-4 py-3 text-gray-500 font-medium">{i + 1}</td>
+                        <td className="px-4 py-3 font-medium text-[#1a3c5e]">{row.employer}</td>
+                        <td className="px-4 py-3 text-gray-700">{row.project}</td>
+                        <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{row.completed}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 

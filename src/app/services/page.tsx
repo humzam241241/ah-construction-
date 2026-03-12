@@ -7,7 +7,7 @@ import { buildLocalBusinessSchema, buildServiceSchema } from "@/lib/schema/local
 export const metadata: Metadata = buildMetadata({
   title: "Construction Services in Lahore — Home Building & Concrete Work",
   description:
-    "Explore A.H Construction's full range of services: home building in Lahore, concrete contractor work, commercial construction, and renovation. Call +92 314 5500113.",
+    "Explore A.H Construction's full range of services: new construction, renovation, infrastructure and civil work, maintenance, and general contracting.",
   path: "/services",
   keywords: [
     "construction services Lahore",
@@ -165,6 +165,54 @@ const serviceCategories = [
       },
     ],
   },
+  {
+    category: "Infrastructure, Maintenance & Management",
+    description: "Civil infrastructure execution, ongoing maintenance, and full project contracting support.",
+    services: [
+      {
+        slug: "infrastructure-civil-work",
+        name: "Infrastructure & Civil Work",
+        description:
+          "Civil and infrastructure execution including roads, drainage, retaining systems, and site development works for public and private projects.",
+        features: [
+          "Road and pavement construction",
+          "Stormwater and sewer drainage lines",
+          "Boundary walls and retaining structures",
+          "Site grading and earthworks",
+          "Utility trenching and ducting",
+          "Execution under engineering supervision",
+        ],
+      },
+      {
+        slug: "maintenance-repair",
+        name: "Maintenance & Repair",
+        description:
+          "Preventive and corrective maintenance support for buildings and facilities, including structural repair, waterproofing, and finishing maintenance.",
+        features: [
+          "Scheduled maintenance programs",
+          "Leakage and waterproofing repair",
+          "Concrete and masonry repair",
+          "Finishing touch-ups and restoration",
+          "Minor MEP repair coordination",
+          "Emergency response support",
+        ],
+      },
+      {
+        slug: "general-contracting-management",
+        name: "General Contracting & Management",
+        description:
+          "Single-point project execution with complete contractor management, progress tracking, quality inspections, and client coordination.",
+        features: [
+          "Project planning and scheduling",
+          "Subcontractor coordination",
+          "Quality and safety monitoring",
+          "Daily and weekly progress reporting",
+          "Procurement and material tracking",
+          "Handover and closeout management",
+        ],
+      },
+    ],
+  },
 ];
 
 export default function ServicesPage() {
@@ -207,7 +255,7 @@ export default function ServicesPage() {
             Construction Services in Lahore
           </h1>
           <p className="text-gray-300 text-lg max-w-2xl">
-            Comprehensive construction, concrete, renovation, and fit-out services across Lahore. One company, every trade, zero compromise.
+            Comprehensive construction, renovation, infrastructure, maintenance, and project management services across Punjab and Pakistan.
           </p>
         </div>
       </section>

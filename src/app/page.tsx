@@ -33,7 +33,7 @@ const services = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
       </svg>
     ),
-    title: "Home Construction",
+    title: "New Construction & Development",
     description: "Custom residential construction from foundation to finishing. Fixed-price contracts with dedicated site engineers across all Lahore housing schemes.",
     href: "/services",
   },
@@ -43,8 +43,8 @@ const services = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
       </svg>
     ),
-    title: "Commercial Construction",
-    description: "Offices, plazas, warehouses, and retail spaces delivered on schedule and within budget with full project management.",
+    title: "Renovation & Remodeling",
+    description: "Upgrade residential and commercial spaces with structural improvements, remodeling, and modern interior and exterior finishes.",
     href: "/services",
   },
   {
@@ -53,8 +53,8 @@ const services = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
       </svg>
     ),
-    title: "Concrete & Structural",
-    description: "RCC structures, foundations, retaining walls, slabs, and columns built to engineering specifications with quality-tested materials.",
+    title: "Infrastructure & Civil Works",
+    description: "Roads, drainage, site development, retaining structures, and reinforced civil works delivered to engineering standards.",
     href: "/services",
   },
   {
@@ -63,10 +63,30 @@ const services = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
       </svg>
     ),
-    title: "Renovation & Remodeling",
-    description: "Transform your existing space with expert kitchen, bathroom, facade, and full interior renovation services in Lahore.",
+    title: "Maintenance & Repair",
+    description: "Planned and emergency maintenance support for structural, waterproofing, finishing, and facility repair requirements.",
     href: "/services",
   },
+  {
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14-6H5m14 12H5m2 4h10" />
+      </svg>
+    ),
+    title: "General Contracting & Management",
+    description: "End-to-end project coordination, contractor management, planning, quality checks, and on-site execution control.",
+    href: "/services",
+  },
+];
+
+const clientTypes = [
+  "Government Projects",
+  "Semi-Government",
+  "NGOs",
+  "Banks",
+  "Private Companies",
+  "Residential Clients",
+  "Commercial Clients",
 ];
 
 const reasons = [
@@ -171,15 +191,15 @@ export default function HomePage() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-[#e8a020]/20 border border-[#e8a020]/30 rounded-full px-4 py-1.5 mb-6">
               <span className="w-2 h-2 bg-[#e8a020] rounded-full animate-pulse" />
-              <span className="text-[#e8a020] text-sm font-medium">Lahore&apos;s Trusted Builder Since 2005</span>
+              <span className="text-[#e8a020] text-sm font-medium">Trusted Construction Partner Since 2005</span>
             </div>
             <h1 id="hero-heading" className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-              Building Lahore&apos;s{" "}
+              Building Pakistan&apos;s{" "}
               <span className="text-[#e8a020]">Skyline</span>{" "}
               One Project at a Time
             </h1>
             <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8 max-w-2xl">
-              From custom homes in DHA to commercial plazas in Gulberg — A.H Construction delivers quality construction with fixed-price contracts, on-time delivery, and zero compromise on materials.
+              From Punjab to projects across Pakistan, A.H Construction delivers reliable construction, renovation, infrastructure, maintenance, and project management services.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
@@ -198,7 +218,7 @@ export default function HomePage() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                +92 314 5500113
+                0314-5500113
               </a>
             </div>
           </div>
@@ -219,6 +239,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Client Types */}
+      <section className="py-14 bg-white border-y border-gray-100" aria-labelledby="client-types-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 id="client-types-heading" className="text-2xl md:text-3xl font-bold text-[#1a3c5e] mb-2">
+              Who We Serve
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              We work with government, semi-government, NGOs, banks, private companies, and residential and commercial clients.
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-2.5">
+            {clientTypes.map((client) => (
+              <span key={client} className="text-sm bg-[#1a3c5e]/10 text-[#1a3c5e] px-3 py-1.5 rounded-full font-medium">
+                {client}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Services Preview */}
       <section className="py-20 bg-gray-50" aria-labelledby="services-preview-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -228,11 +269,11 @@ export default function HomePage() {
               Construction Services in Lahore
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Whether you need a home builder, concrete contractor, or commercial construction team — we have the expertise and proven track record to deliver.
+              Our services are prioritized around new development, renovation, civil infrastructure, maintenance, and full contracting management.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {services.map((service) => (
               <Link
                 key={service.title}
@@ -306,7 +347,7 @@ export default function HomePage() {
               Featured Projects
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              A selection of completed projects across Lahore — from residential builds to large-scale commercial developments.
+              A selection of completed projects across Punjab and Pakistan — from residential builds to large-scale commercial developments.
             </p>
           </div>
 
@@ -353,7 +394,7 @@ export default function HomePage() {
             Ready to Start Your Construction Project?
           </h2>
           <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-            Contact our team in Lahore today for a free consultation and detailed estimate. No obligation, no pressure — just honest advice from experienced builders.
+            Contact our team today for a free consultation and detailed estimate. No obligation, no pressure — just honest advice from experienced builders.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -372,7 +413,7 @@ export default function HomePage() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              Call +92 314 5500113
+              Call 0314-5500113
             </a>
           </div>
         </div>

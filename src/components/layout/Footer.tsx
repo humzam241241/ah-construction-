@@ -13,12 +13,19 @@ const quickLinks = [
   { label: "About Us", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Projects", href: "/projects" },
+  { label: "Careers", href: "/careers" },
   { label: "Contact", href: "/contact" },
 ];
 
 const serviceAreas = [
-  "DHA Lahore", "Gulberg", "Bahria Town", "Model Town",
-  "Johar Town", "Cantt", "Wapda Town", "Iqbal Town",
+  "Punjab",
+  "Lahore",
+  "Islamabad",
+  "Rawalpindi",
+  "Faisalabad",
+  "Multan",
+  "Peshawar",
+  "Karachi",
 ];
 
 export default function Footer() {
@@ -53,13 +60,16 @@ export default function Footer() {
                 <svg className="w-4 h-4 text-[#e8a020] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <a href="tel:+923145500113" className="hover:text-[#e8a020] transition-colors">+92 314 5500113</a>
+                <div className="space-y-1">
+                  <a href="tel:+924235299722" className="block hover:text-[#e8a020] transition-colors">042-35299722</a>
+                  <a href="tel:+923145500113" className="block hover:text-[#e8a020] transition-colors">0314-5500113</a>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-[#e8a020] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <a href="mailto:info@ahconstruction.pk" className="hover:text-[#e8a020] transition-colors">info@ahconstruction.pk</a>
+                <a href="mailto:ahc_786@yahoo.com" className="hover:text-[#e8a020] transition-colors">ahc_786@yahoo.com</a>
               </div>
             </div>
           </div>
@@ -110,7 +120,7 @@ export default function Footer() {
               ))}
             </div>
             <p className="text-sm mt-4 leading-relaxed">
-              We serve all areas across Lahore and surrounding regions of Punjab, Pakistan.
+              We mainly serve Punjab and also execute projects across Pakistan.
             </p>
             <Link
               href="/contact"
@@ -123,7 +133,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
-          <p>© {new Date().getFullYear()} A.H Construction. All rights reserved. Lahore, Pakistan.</p>
+          <p>© {new Date().getFullYear()} A.H Construction. All rights reserved. Punjab, Pakistan.</p>
           <p>Construction Company in Lahore — Licensed &amp; Insured</p>
         </div>
       </div>

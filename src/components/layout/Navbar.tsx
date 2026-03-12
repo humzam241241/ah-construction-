@@ -9,6 +9,7 @@ const navLinks = [
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Projects", href: "/projects" },
+  { label: "Careers", href: "/careers" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -30,7 +31,7 @@ export default function Navbar() {
                 A.H Construction
               </span>
               <span className="block text-[#e8a020] text-[10px] tracking-widest uppercase">
-                Lahore, Pakistan
+                Punjab, Pakistan
               </span>
             </div>
           </Link>
