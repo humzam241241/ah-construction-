@@ -148,22 +148,22 @@ const reasons = [
 
 const featuredProjects = [
   {
-    title: "5-Kanal Residential Villa — DHA Phase 6",
-    category: "Residential",
-    detail: "Complete turnkey construction including grey structure, full finishing, landscaping, and boundary wall.",
-    duration: "14 months",
+    title: "University of the Punjab — QAC",
+    category: "Institutional",
+    detail: "Construction of TWO Examination Halls at First Floor of IAS; Employee Apartments (J-Type) Block H & J at QAC.",
+    duration: "Completed 2015–2016",
   },
   {
-    title: "Commercial Plaza — Gulberg III",
-    category: "Commercial",
-    detail: "6-storey mixed-use plaza with basement parking, retail units on ground floor, and offices above.",
-    duration: "22 months",
+    title: "Punjab Daanish Schools — Bhakkar",
+    category: "Government",
+    detail: "Establishment of Daanish School at Mankera Dist. Bhakkar (Boys & Girls Campus packages).",
+    duration: "Completed 2024–2025",
   },
   {
-    title: "Industrial Warehouse — Sundar Industrial Estate",
-    category: "Industrial",
-    detail: "25,000 sq ft steel-frame warehouse with RCC boundary wall, loading bays, and admin block.",
-    duration: "9 months",
+    title: "IDAP — Tertiary Care Hospitals, Lahore",
+    category: "Government",
+    detail: "Construction of Hepatitis Prevention & Treatment Clinic (HPTC) at existing building of 04 tertiary care hospitals.",
+    duration: "Completed Jun 2020",
   },
 ];
 
