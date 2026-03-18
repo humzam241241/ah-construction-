@@ -91,10 +91,11 @@ export default function ScrollVideoHero() {
           return;
         }
 
-        const scrollY = window.scrollY ?? 0;
-        const sectionTop = rect.top + scrollY;
-        const scrolledInto = Math.max(0, scrollY - sectionTop);
-        const progress = Math.min(1, scrolledInto / totalScroll);
+        // rect.top is negative when scrolled past the top of section
+        // When rect.top = 0, we're at the start (progress = 0)
+        // When rect.top = -(sectionHeight - viewportHeight), we're at the end (progress = 1)
+        const scrolledAmount = -rect.top;
+        const progress = Math.max(0, Math.min(1, scrolledAmount / totalScroll));
 
         // Video frames advance in sync with scroll (full video plays through the scroll)
         const index = Math.min(currentFrameCount, Math.max(1, Math.ceil(progress * currentFrameCount)));
