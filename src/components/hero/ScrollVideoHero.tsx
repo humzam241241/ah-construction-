@@ -6,7 +6,14 @@ import Link from "next/link";
 const FRAMES_BASE = "/hero-frames";
 const SCROLL_HEIGHT_VH = 500;
 
-const TEXT_BLOCKS = [
+type TextBlock = 
+  | { type: "badge"; text: string }
+  | { type: "heading"; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "cta"; text: string }
+  | { type: "spacer"; text?: never };
+
+const TEXT_BLOCKS: TextBlock[] = [
   { type: "badge", text: "Trusted Since 2005" },
   { type: "spacer" },
   { type: "heading", text: "Building Pakistan's Skyline" },
