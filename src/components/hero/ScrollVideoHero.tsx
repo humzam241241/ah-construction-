@@ -4,22 +4,38 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 
 const FRAMES_BASE = "/hero-frames";
-const SCROLL_HEIGHT_VH = 400;
+const SCROLL_HEIGHT_VH = 500;
 
 const TEXT_BLOCKS = [
   { type: "badge", text: "Trusted Since 2005" },
+  { type: "spacer" },
   { type: "heading", text: "Building Pakistan's Skyline" },
+  { type: "spacer" },
   { type: "paragraph", text: "From Lahore to projects across Punjab" },
+  { type: "spacer" },
   { type: "heading", text: "One Project at a Time" },
+  { type: "spacer" },
   { type: "paragraph", text: "Custom homes, commercial builds, renovations" },
+  { type: "spacer" },
   { type: "heading", text: "500+ Projects Delivered" },
+  { type: "spacer" },
   { type: "paragraph", text: "Government, NGOs, banks, private clients" },
+  { type: "spacer" },
   { type: "heading", text: "Quality You Can Trust" },
+  { type: "spacer" },
   { type: "paragraph", text: "10-year structural warranty included" },
+  { type: "spacer" },
   { type: "heading", text: "Licensed & Insured" },
+  { type: "spacer" },
   { type: "paragraph", text: "Full compliance with LDA & WASA standards" },
+  { type: "spacer" },
+  { type: "spacer" },
   { type: "heading", text: "Start Your Build Today" },
+  { type: "spacer" },
   { type: "cta", text: "Get a Free Quote" },
+  { type: "spacer" },
+  { type: "spacer" },
+  { type: "spacer" },
 ];
 
 export default function ScrollVideoHero() {
@@ -65,12 +81,12 @@ export default function ScrollVideoHero() {
       const scrolledInto = Math.max(0, scrollY - sectionTop);
       const progress = Math.min(1, scrolledInto / totalScroll);
 
-      // Video frames advance slowly (1x speed)
-      const index = Math.min(frameCount, Math.max(1, Math.floor(progress * frameCount) + 1));
+      // Video frames advance in sync with scroll (full video plays through the scroll)
+      const index = Math.min(frameCount, Math.max(1, Math.ceil(progress * frameCount)));
       setFrameIndex(index);
 
-      // Text scrolls faster (2.5x multiplier for Star Wars effect)
-      const textTravelDistance = viewportHeight * 2.5;
+      // Text scrolls faster than video (3x multiplier for Star Wars effect)
+      const textTravelDistance = viewportHeight * 4;
       setTextOffset(progress * textTravelDistance);
     });
   }, [frameCount]);
@@ -91,13 +107,26 @@ export default function ScrollVideoHero() {
     };
   }, [frameCount, handleScroll]);
 
-  // Preload frames for smoother playback
+  // Preload all frames for smooth playback
   useEffect(() => {
     if (frameCount <= 0) return;
-    for (let i = 1; i <= Math.min(frameCount, 20); i++) {
-      const img = new Image();
-      img.src = `${FRAMES_BASE}/frame_${String(i).padStart(4, "0")}.jpg`;
-    }
+    const preloadBatch = (start: number, end: number) => {
+      for (let i = start; i <= Math.min(end, frameCount); i++) {
+        const img = new Image();
+        img.src = `${FRAMES_BASE}/frame_${String(i).padStart(4, "0")}.jpg`;
+      }
+    };
+    // Preload first 50 immediately
+    preloadBatch(1, 50);
+    // Preload rest in batches
+    const t1 = setTimeout(() => preloadBatch(51, 150), 500);
+    const t2 = setTimeout(() => preloadBatch(151, 300), 1500);
+    const t3 = setTimeout(() => preloadBatch(301, frameCount), 3000);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, [frameCount]);
 
   if (!isLoaded) {
@@ -167,36 +196,31 @@ export default function ScrollVideoHero() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
           </div>
 
-          {/* Right side: Star Wars scrolling text */}
+          {/* Right side: Vertical scrolling text (no angle) */}
           <div className="absolute inset-0 lg:relative lg:w-1/2 h-full overflow-hidden">
             {/* Dark gradient background for text side */}
             <div className="absolute inset-0 bg-gradient-to-l from-[#0a1a2e] via-[#0a1a2e]/95 to-transparent lg:from-[#0a1a2e] lg:via-[#0a1a2e] lg:to-[#0a1a2e]" />
             
-            {/* Perspective container for Star Wars effect */}
-            <div 
-              className="relative h-full flex items-center justify-center"
-              style={{
-                perspective: "400px",
-                perspectiveOrigin: "center center",
-              }}
-            >
-              {/* Scrolling text container */}
+            {/* Scrolling text container - straight vertical, no perspective */}
+            <div className="relative h-full overflow-hidden">
               <div
-                className="absolute w-full px-6 sm:px-8 lg:px-12"
+                className="absolute w-full px-6 sm:px-8 lg:px-12 pt-24"
                 style={{
-                  transform: `translateY(${100 - textOffset}%) rotateX(25deg)`,
-                  transformOrigin: "center bottom",
+                  transform: `translateY(calc(100vh - ${textOffset}px))`,
                   willChange: "transform",
                 }}
               >
-                <div className="max-w-lg mx-auto space-y-6 lg:space-y-8">
+                <div className="max-w-lg mx-auto">
                   {TEXT_BLOCKS.map((block, i) => {
+                    if (block.type === "spacer") {
+                      return <div key={i} className="h-16 lg:h-24" />;
+                    }
                     if (block.type === "badge") {
                       return (
-                        <div key={i} className="flex justify-center lg:justify-start">
-                          <div className="inline-flex items-center gap-2 bg-[#e8a020]/20 border border-[#e8a020]/40 rounded-full px-4 py-2">
+                        <div key={i} className="flex justify-center lg:justify-start mb-4">
+                          <div className="inline-flex items-center gap-2 bg-[#e8a020]/20 border border-[#e8a020]/40 rounded-full px-5 py-2.5">
                             <span className="w-2 h-2 bg-[#e8a020] rounded-full animate-pulse" />
-                            <span className="text-[#e8a020] text-sm font-medium tracking-wide">{block.text}</span>
+                            <span className="text-[#e8a020] text-sm font-semibold tracking-wide">{block.text}</span>
                           </div>
                         </div>
                       );
@@ -205,8 +229,8 @@ export default function ScrollVideoHero() {
                       return (
                         <h2
                           key={i}
-                          className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight text-center lg:text-left"
-                          style={{ textShadow: "0 4px 20px rgba(0,0,0,0.5)" }}
+                          className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight text-center lg:text-left"
+                          style={{ textShadow: "0 4px 30px rgba(0,0,0,0.7)" }}
                         >
                           {block.text.includes("Skyline") ? (
                             <>
@@ -232,8 +256,8 @@ export default function ScrollVideoHero() {
                       return (
                         <p
                           key={i}
-                          className="text-lg sm:text-xl text-gray-300 leading-relaxed text-center lg:text-left"
-                          style={{ textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}
+                          className="text-lg sm:text-xl lg:text-2xl text-gray-300 leading-relaxed text-center lg:text-left"
+                          style={{ textShadow: "0 2px 15px rgba(0,0,0,0.6)" }}
                         >
                           {block.text}
                         </p>
@@ -241,10 +265,10 @@ export default function ScrollVideoHero() {
                     }
                     if (block.type === "cta") {
                       return (
-                        <div key={i} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+                        <div key={i} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                           <Link
                             href="/contact"
-                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors shadow-lg shadow-[#e8a020]/30"
+                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors shadow-xl shadow-[#e8a020]/40"
                           >
                             Get a Free Quote
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -253,7 +277,7 @@ export default function ScrollVideoHero() {
                           </Link>
                           <a
                             href="tel:+923145500113"
-                            className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/40 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors backdrop-blur-sm"
+                            className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/50 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors backdrop-blur-sm"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -269,9 +293,9 @@ export default function ScrollVideoHero() {
               </div>
 
               {/* Top fade for text disappearing */}
-              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0a1a2e] to-transparent pointer-events-none z-10" />
+              <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#0a1a2e] via-[#0a1a2e]/80 to-transparent pointer-events-none z-10" />
               {/* Bottom fade */}
-              <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a1a2e] to-transparent pointer-events-none z-10" />
+              <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#0a1a2e] via-[#0a1a2e]/80 to-transparent pointer-events-none z-10" />
             </div>
           </div>
         </div>
