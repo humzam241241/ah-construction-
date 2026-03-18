@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 const FRAMES_BASE = "/hero-frames";
-const SCROLL_HEIGHT_VH = 500;
+const SCROLL_HEIGHT_VH = 300; // Shorter scroll = faster animation playback
 
 type TextBlock = 
   | { type: "badge"; text: string }
@@ -15,33 +15,16 @@ type TextBlock =
 
 const TEXT_BLOCKS: TextBlock[] = [
   { type: "badge", text: "Trusted Since 2005" },
-  { type: "spacer" },
   { type: "heading", text: "Building Pakistan's Skyline" },
-  { type: "spacer" },
   { type: "paragraph", text: "From Lahore to projects across Punjab" },
-  { type: "spacer" },
   { type: "heading", text: "One Project at a Time" },
-  { type: "spacer" },
   { type: "paragraph", text: "Custom homes, commercial builds, renovations" },
-  { type: "spacer" },
   { type: "heading", text: "500+ Projects Delivered" },
-  { type: "spacer" },
   { type: "paragraph", text: "Government, NGOs, banks, private clients" },
-  { type: "spacer" },
   { type: "heading", text: "Quality You Can Trust" },
-  { type: "spacer" },
-  { type: "paragraph", text: "10-year structural warranty included" },
-  { type: "spacer" },
-  { type: "heading", text: "Licensed & Insured" },
-  { type: "spacer" },
-  { type: "paragraph", text: "Full compliance with LDA & WASA standards" },
-  { type: "spacer" },
-  { type: "spacer" },
+  { type: "paragraph", text: "10-year structural warranty" },
   { type: "heading", text: "Start Your Build Today" },
-  { type: "spacer" },
   { type: "cta", text: "Get a Free Quote" },
-  { type: "spacer" },
-  { type: "spacer" },
   { type: "spacer" },
 ];
 
@@ -101,8 +84,8 @@ export default function ScrollVideoHero() {
         const index = Math.min(currentFrameCount, Math.max(1, Math.ceil(progress * currentFrameCount)));
         setFrameIndex(index);
 
-        // Text scrolls faster than video (4x multiplier for Star Wars effect)
-        const textTravelDistance = viewportHeight * 4;
+        // Text scrolls faster than video (2.5x multiplier for Star Wars effect)
+        const textTravelDistance = viewportHeight * 2.5;
         setTextOffset(progress * textTravelDistance);
       });
     };
