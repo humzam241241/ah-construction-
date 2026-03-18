@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 const FRAMES_BASE = "/hero-frames";
@@ -66,45 +66,50 @@ export default function ScrollVideoHero() {
       });
   }, []);
 
-  const handleScroll = useCallback(() => {
+  // Use ref to always have current frameCount in scroll handler
+  const frameCountRef = useRef(frameCount);
+  frameCountRef.current = frameCount;
+
+  useEffect(() => {
     const section = sectionRef.current;
     if (!section || frameCount <= 0) return;
 
-    cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      const rect = section.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const sectionHeight = rect.height;
-      const totalScroll = sectionHeight - viewportHeight;
+    const handleScroll = () => {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        const currentFrameCount = frameCountRef.current;
+        if (currentFrameCount <= 0) return;
 
-      if (totalScroll <= 0) {
-        setFrameIndex(1);
-        setTextOffset(0);
-        return;
-      }
+        const rect = section.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const sectionHeight = rect.height;
+        const totalScroll = sectionHeight - viewportHeight;
 
-      const scrollY = window.scrollY ?? 0;
-      const sectionTop = rect.top + scrollY;
-      const scrolledInto = Math.max(0, scrollY - sectionTop);
-      const progress = Math.min(1, scrolledInto / totalScroll);
+        if (totalScroll <= 0) {
+          setFrameIndex(1);
+          setTextOffset(0);
+          return;
+        }
 
-      // Video frames advance in sync with scroll (full video plays through the scroll)
-      const index = Math.min(frameCount, Math.max(1, Math.ceil(progress * frameCount)));
-      setFrameIndex(index);
+        const scrollY = window.scrollY ?? 0;
+        const sectionTop = rect.top + scrollY;
+        const scrolledInto = Math.max(0, scrollY - sectionTop);
+        const progress = Math.min(1, scrolledInto / totalScroll);
 
-      // Text scrolls faster than video (3x multiplier for Star Wars effect)
-      const textTravelDistance = viewportHeight * 4;
-      setTextOffset(progress * textTravelDistance);
-    });
-  }, [frameCount]);
+        // Video frames advance in sync with scroll (full video plays through the scroll)
+        const index = Math.min(currentFrameCount, Math.max(1, Math.ceil(progress * currentFrameCount)));
+        setFrameIndex(index);
 
-  useEffect(() => {
-    if (frameCount <= 0) return;
+        // Text scrolls faster than video (4x multiplier for Star Wars effect)
+        const textTravelDistance = viewportHeight * 4;
+        setTextOffset(progress * textTravelDistance);
+      });
+    };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleScroll);
     handleScroll();
-    const t = setTimeout(handleScroll, 50);
+    const t = setTimeout(handleScroll, 100);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -112,7 +117,7 @@ export default function ScrollVideoHero() {
       clearTimeout(t);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [frameCount, handleScroll]);
+  }, [frameCount]);
 
   // Preload frames in batches for smooth playback
   useEffect(() => {
