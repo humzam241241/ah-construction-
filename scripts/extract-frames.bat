@@ -4,7 +4,7 @@ cd /d "%~dp0\.."
 
 set "VIDEO=d6ti69q344qg008009q0.mp4"
 set "OUT=public\hero-frames"
-set "FPS=60"
+set "FPS=240"
 
 if not exist "%VIDEO%" (
   echo ERROR: Video file not found: %VIDEO%

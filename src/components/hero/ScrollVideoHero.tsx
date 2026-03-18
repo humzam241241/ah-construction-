@@ -114,7 +114,7 @@ export default function ScrollVideoHero() {
     };
   }, [frameCount, handleScroll]);
 
-  // Preload all frames for smooth playback
+  // Preload frames in batches for smooth playback
   useEffect(() => {
     if (frameCount <= 0) return;
     const preloadBatch = (start: number, end: number) => {
@@ -123,16 +123,20 @@ export default function ScrollVideoHero() {
         img.src = `${FRAMES_BASE}/frame_${String(i).padStart(4, "0")}.jpg`;
       }
     };
-    // Preload first 50 immediately
-    preloadBatch(1, 50);
-    // Preload rest in batches
-    const t1 = setTimeout(() => preloadBatch(51, 150), 500);
-    const t2 = setTimeout(() => preloadBatch(151, 300), 1500);
-    const t3 = setTimeout(() => preloadBatch(301, frameCount), 3000);
+    // Preload first 100 immediately for instant start
+    preloadBatch(1, 100);
+    // Preload rest progressively in larger batches
+    const t1 = setTimeout(() => preloadBatch(101, 300), 500);
+    const t2 = setTimeout(() => preloadBatch(301, 600), 1500);
+    const t3 = setTimeout(() => preloadBatch(601, 1000), 3000);
+    const t4 = setTimeout(() => preloadBatch(1001, 1500), 5000);
+    const t5 = setTimeout(() => preloadBatch(1501, frameCount), 8000);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
     };
   }, [frameCount]);
 
