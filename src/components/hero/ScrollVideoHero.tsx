@@ -1,64 +1,112 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 
 const FRAMES_BASE = "/hero-frames";
-const SCROLL_HEIGHT_VH = 300;
-const OVERLAY_STEPS = [
-  { start: 0, end: 0.28, title: "Building Pakistan's", sub: "Skyline" },
-  { start: 0.28, end: 0.55, title: "Trusted Since 2005", sub: "One project at a time" },
-  { start: 0.55, end: 0.82, title: "Lahore to Punjab", sub: "We deliver" },
-  { start: 0.82, end: 1.01, title: "Start your build", sub: "Get a free quote" },
+const SCROLL_HEIGHT_VH = 400;
+
+const TEXT_BLOCKS = [
+  { type: "badge", text: "Trusted Since 2005" },
+  { type: "heading", text: "Building Pakistan's Skyline" },
+  { type: "paragraph", text: "From Lahore to projects across Punjab" },
+  { type: "heading", text: "One Project at a Time" },
+  { type: "paragraph", text: "Custom homes, commercial builds, renovations" },
+  { type: "heading", text: "500+ Projects Delivered" },
+  { type: "paragraph", text: "Government, NGOs, banks, private clients" },
+  { type: "heading", text: "Quality You Can Trust" },
+  { type: "paragraph", text: "10-year structural warranty included" },
+  { type: "heading", text: "Licensed & Insured" },
+  { type: "paragraph", text: "Full compliance with LDA & WASA standards" },
+  { type: "heading", text: "Start Your Build Today" },
+  { type: "cta", text: "Get a Free Quote" },
 ];
 
 export default function ScrollVideoHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [frameCount, setFrameCount] = useState(0);
   const [frameIndex, setFrameIndex] = useState(1);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [activeStep, setActiveStep] = useState(0);
+  const [textOffset, setTextOffset] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
     fetch(`${FRAMES_BASE}/count.json`)
       .then((r) => r.json())
-      .then((data: { count: number }) => setFrameCount(data.count))
-      .catch(() => setFrameCount(0));
+      .then((data: { count: number }) => {
+        setFrameCount(data.count);
+        setIsLoaded(true);
+      })
+      .catch(() => {
+        setFrameCount(0);
+        setIsLoaded(true);
+      });
   }, []);
 
-  useEffect(() => {
+  const handleScroll = useCallback(() => {
     const section = sectionRef.current;
-    if (!section) return;
+    if (!section || frameCount <= 0) return;
 
-    const onScroll = () => {
-      rafRef.current = requestAnimationFrame(() => {
-        const rect = section.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        const totalScroll = rect.height - viewportHeight;
-        if (totalScroll <= 0) {
-          setScrollProgress(0);
-          setFrameIndex(1);
-          setActiveStep(0);
-          return;
-        }
-        const progress = Math.max(0, Math.min(1, -rect.top / totalScroll));
-        setScrollProgress(progress);
-        const count = frameCount || 1;
-        const index = Math.min(count, Math.max(1, Math.floor(progress * count) + 1));
-        setFrameIndex(index);
-        const step = OVERLAY_STEPS.findIndex((s) => progress >= s.start && progress < s.end);
-        setActiveStep(step >= 0 ? step : OVERLAY_STEPS.length - 1);
-      });
-    };
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const sectionHeight = rect.height;
+      const totalScroll = sectionHeight - viewportHeight;
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+      if (totalScroll <= 0) {
+        setFrameIndex(1);
+        setTextOffset(0);
+        return;
+      }
+
+      const scrollY = window.scrollY ?? 0;
+      const sectionTop = rect.top + scrollY;
+      const scrolledInto = Math.max(0, scrollY - sectionTop);
+      const progress = Math.min(1, scrolledInto / totalScroll);
+
+      // Video frames advance slowly (1x speed)
+      const index = Math.min(frameCount, Math.max(1, Math.floor(progress * frameCount) + 1));
+      setFrameIndex(index);
+
+      // Text scrolls faster (2.5x multiplier for Star Wars effect)
+      const textTravelDistance = viewportHeight * 2.5;
+      setTextOffset(progress * textTravelDistance);
+    });
+  }, [frameCount]);
+
+  useEffect(() => {
+    if (frameCount <= 0) return;
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+    handleScroll();
+    const t = setTimeout(handleScroll, 50);
+
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      clearTimeout(t);
       cancelAnimationFrame(rafRef.current);
     };
+  }, [frameCount, handleScroll]);
+
+  // Preload frames for smoother playback
+  useEffect(() => {
+    if (frameCount <= 0) return;
+    for (let i = 1; i <= Math.min(frameCount, 20); i++) {
+      const img = new Image();
+      img.src = `${FRAMES_BASE}/frame_${String(i).padStart(4, "0")}.jpg`;
+    }
   }, [frameCount]);
+
+  if (!isLoaded) {
+    return (
+      <section className="h-screen bg-[#0a1a2e] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#e8a020] border-t-transparent rounded-full animate-spin" />
+      </section>
+    );
+  }
 
   if (frameCount === 0) {
     return (
@@ -92,83 +140,148 @@ export default function ScrollVideoHero() {
   }
 
   const framePath = `${FRAMES_BASE}/frame_${String(frameIndex).padStart(4, "0")}.jpg`;
-  const currentOverlay = OVERLAY_STEPS[activeStep];
 
   return (
     <section
       ref={sectionRef}
-      className="relative"
+      className="relative w-full"
       style={{ height: `${SCROLL_HEIGHT_VH}vh` }}
       aria-label="Hero animation"
     >
-      <div className="sticky top-0 left-0 w-full h-screen">
-        <div className="absolute inset-0 bg-[#1a3c5e]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            key={frameIndex}
-            src={framePath}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50 pointer-events-none" />
-        <div className="absolute inset-0 flex flex-col justify-center items-center px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            {(() => {
-              const step = currentOverlay;
-              const progressInStep =
-                scrollProgress >= step.start && step.end > step.start
-                  ? (scrollProgress - step.start) / (step.end - step.start)
-                  : 0;
-              const isLast = activeStep === OVERLAY_STEPS.length - 1;
-              return (
-                <div className="flex flex-col justify-center items-center">
-                  <h1
-                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg"
-                    style={{
-                      transform: `translateY(${(1 - progressInStep) * 24}px)`,
-                      opacity: 0.92 + progressInStep * 0.08,
-                      transition: "transform 0.12s ease-out, opacity 0.15s ease-out",
-                    }}
-                  >
-                    {step.title}
-                    {step.sub && (
-                      <span className="block text-[#e8a020] mt-1">{step.sub}</span>
-                    )}
-                  </h1>
-                  {isLast && (
-                    <div
-                      className="mt-8 flex flex-wrap gap-4 justify-center pointer-events-auto"
-                      style={{
-                        opacity: progressInStep > 0.25 ? 1 : 0,
-                        transform: `translateY(${progressInStep > 0.25 ? 0 : 24}px)`,
-                        transition: "opacity 0.35s ease, transform 0.35s ease",
-                      }}
-                    >
-                      <Link
-                        href="/contact"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors shadow-lg"
-                      >
-                        Get a Free Quote
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </Link>
-                      <a
-                        href="tel:+923145500113"
-                        className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white/80 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                        0314-5500113
-                      </a>
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
+      {/* Sticky container that stays in view */}
+      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
+        {/* Split screen layout */}
+        <div className="flex h-full">
+          {/* Left side: Video frames */}
+          <div className="relative w-full lg:w-1/2 h-full bg-[#0a1a2e]">
+            <img
+              src={framePath}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ 
+                willChange: "contents",
+              }}
+            />
+            {/* Gradient overlay for text readability on mobile */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/60 lg:to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
           </div>
+
+          {/* Right side: Star Wars scrolling text */}
+          <div className="absolute inset-0 lg:relative lg:w-1/2 h-full overflow-hidden">
+            {/* Dark gradient background for text side */}
+            <div className="absolute inset-0 bg-gradient-to-l from-[#0a1a2e] via-[#0a1a2e]/95 to-transparent lg:from-[#0a1a2e] lg:via-[#0a1a2e] lg:to-[#0a1a2e]" />
+            
+            {/* Perspective container for Star Wars effect */}
+            <div 
+              className="relative h-full flex items-center justify-center"
+              style={{
+                perspective: "400px",
+                perspectiveOrigin: "center center",
+              }}
+            >
+              {/* Scrolling text container */}
+              <div
+                className="absolute w-full px-6 sm:px-8 lg:px-12"
+                style={{
+                  transform: `translateY(${100 - textOffset}%) rotateX(25deg)`,
+                  transformOrigin: "center bottom",
+                  willChange: "transform",
+                }}
+              >
+                <div className="max-w-lg mx-auto space-y-6 lg:space-y-8">
+                  {TEXT_BLOCKS.map((block, i) => {
+                    if (block.type === "badge") {
+                      return (
+                        <div key={i} className="flex justify-center lg:justify-start">
+                          <div className="inline-flex items-center gap-2 bg-[#e8a020]/20 border border-[#e8a020]/40 rounded-full px-4 py-2">
+                            <span className="w-2 h-2 bg-[#e8a020] rounded-full animate-pulse" />
+                            <span className="text-[#e8a020] text-sm font-medium tracking-wide">{block.text}</span>
+                          </div>
+                        </div>
+                      );
+                    }
+                    if (block.type === "heading") {
+                      return (
+                        <h2
+                          key={i}
+                          className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight text-center lg:text-left"
+                          style={{ textShadow: "0 4px 20px rgba(0,0,0,0.5)" }}
+                        >
+                          {block.text.includes("Skyline") ? (
+                            <>
+                              Building Pakistan&apos;s{" "}
+                              <span className="text-[#e8a020]">Skyline</span>
+                            </>
+                          ) : block.text.includes("500+") ? (
+                            <>
+                              <span className="text-[#e8a020]">500+</span> Projects Delivered
+                            </>
+                          ) : block.text.includes("Start") ? (
+                            <>
+                              Start Your{" "}
+                              <span className="text-[#e8a020]">Build</span> Today
+                            </>
+                          ) : (
+                            block.text
+                          )}
+                        </h2>
+                      );
+                    }
+                    if (block.type === "paragraph") {
+                      return (
+                        <p
+                          key={i}
+                          className="text-lg sm:text-xl text-gray-300 leading-relaxed text-center lg:text-left"
+                          style={{ textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}
+                        >
+                          {block.text}
+                        </p>
+                      );
+                    }
+                    if (block.type === "cta") {
+                      return (
+                        <div key={i} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+                          <Link
+                            href="/contact"
+                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors shadow-lg shadow-[#e8a020]/30"
+                          >
+                            Get a Free Quote
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                          </Link>
+                          <a
+                            href="tel:+923145500113"
+                            className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/40 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors backdrop-blur-sm"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            0314-5500113
+                          </a>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
+              </div>
+
+              {/* Top fade for text disappearing */}
+              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0a1a2e] to-transparent pointer-events-none z-10" />
+              {/* Bottom fade */}
+              <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a1a2e] to-transparent pointer-events-none z-10" />
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/60 animate-bounce z-20">
+          <span className="text-xs uppercase tracking-widest">Scroll</span>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
         </div>
       </div>
     </section>
