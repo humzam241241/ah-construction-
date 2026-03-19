@@ -35,23 +35,32 @@ export default function ScrollVideoHero() {
   const [showFallback, setShowFallback] = useState(false);
 
   // Text scroll — runs immediately, no dependency on video
+  // Measures actual text height so content perfectly spans the full scroll
   useEffect(() => {
     if (showFallback) return;
     const section = sectionRef.current;
-    if (!section) return;
+    const textEl = textRef.current;
+    if (!section || !textEl) return;
 
     let currentTextOffset = 0;
     let targetTextOffset = 0;
     let running = true;
+    let totalTravel = 0; // recalculated on scroll/resize
 
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+    const measure = () => {
+      const vh = window.innerHeight;
+      const textHeight = textEl.scrollHeight;
+      // Text starts at translateY(100vh) (below screen).
+      // It needs to travel: 100vh (to reach top) + textHeight (to scroll fully past)
+      totalTravel = vh + textHeight;
+    };
 
     const tick = () => {
       if (!running) return;
       currentTextOffset = lerp(currentTextOffset, targetTextOffset, 0.12);
-      if (textRef.current) {
-        textRef.current.style.transform = `translateY(calc(100vh - ${currentTextOffset}px))`;
-      }
+      textEl.style.transform = `translateY(calc(100vh - ${currentTextOffset}px))`;
       requestAnimationFrame(tick);
     };
 
@@ -62,11 +71,12 @@ export default function ScrollVideoHero() {
       if (totalScroll <= 0) return;
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
-      targetTextOffset = progress * vh * 5;
+      targetTextOffset = progress * totalTravel;
     };
 
+    measure();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", () => { measure(); onScroll(); });
     onScroll();
     currentTextOffset = targetTextOffset;
     requestAnimationFrame(tick);
