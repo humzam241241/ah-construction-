@@ -218,7 +218,7 @@ export default function ScrollVideoHero() {
                     }
                     if (block.type === "badge") {
                       return (
-                        <div key={i} className="flex justify-center lg:justify-start mb-12">
+                        <div key={i} className="flex justify-center lg:justify-start pb-[20vh]">
                           <div className="inline-flex items-center gap-2 bg-[#e8a020]/20 border border-[#e8a020]/40 rounded-full px-5 py-2.5">
                             <span className="w-2 h-2 bg-[#e8a020] rounded-full animate-pulse" />
                             <span className="text-[#e8a020] text-sm font-semibold tracking-wide">{block.text}</span>
@@ -230,7 +230,7 @@ export default function ScrollVideoHero() {
                       return (
                         <h2
                           key={i}
-                          className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight text-center lg:text-left mt-28 mb-4"
+                          className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight text-center lg:text-left pt-[30vh] mb-4"
                           style={{ textShadow: "0 4px 30px rgba(0,0,0,0.7)" }}
                         >
                           {block.text.includes("Skyline") ? (
@@ -266,7 +266,7 @@ export default function ScrollVideoHero() {
                     }
                     if (block.type === "cta") {
                       return (
-                        <div key={i} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-28">
+                        <div key={i} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-[30vh]">
                           <Link
                             href="/contact"
                             className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors shadow-xl shadow-[#e8a020]/40"
