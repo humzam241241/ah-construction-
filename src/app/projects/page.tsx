@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo/metadata";
+import ScrollReveal, { StaggerContainer } from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = buildMetadata({
   title: "Construction Projects — Portfolio",
@@ -58,7 +59,7 @@ export default function ProjectsPage() {
       {/* Project cards */}
       <main className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={100} animation="fade-up" duration={700}>
             {completedProjects.map((item, i) => (
               <article
                 key={i}
@@ -81,36 +82,42 @@ export default function ProjectsPage() {
                 </div>
               </article>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </main>
 
       {/* CTA */}
       <section className="py-16 bg-[#1a3c5e]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Add Your Project to This List?
-          </h2>
-          <p className="text-gray-300 mb-8 max-w-xl mx-auto">
-            Get a free consultation and estimate from our experienced construction team.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors"
-            >
-              Get a Free Quote
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <Link
-              href="/services"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
-            >
-              View Our Services
-            </Link>
-          </div>
+          <ScrollReveal animation="brick-drop" duration={900}>
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Ready to Add Your Project to This List?
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={200}>
+            <p className="text-gray-300 mb-8 max-w-xl mx-auto">
+              Get a free consultation and estimate from our experienced construction team.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal animation="scale-up" delay={300}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors"
+              >
+                Get a Free Quote
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+              <Link
+                href="/services"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+              >
+                View Our Services
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
     </>

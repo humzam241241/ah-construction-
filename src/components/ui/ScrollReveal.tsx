@@ -20,14 +20,15 @@ interface ScrollRevealProps {
   className?: string;
 }
 
+// Mobile-friendly: smaller translate distances to avoid overflow
 const INITIAL_STYLES: Record<Animation, string> = {
-  "brick-drop": "opacity-0 -translate-y-24 scale-105",
-  "fade-up": "opacity-0 translate-y-8",
+  "brick-drop": "opacity-0 -translate-y-10 sm:-translate-y-24 scale-105",
+  "fade-up": "opacity-0 translate-y-5 sm:translate-y-8",
   "fade-in": "opacity-0",
-  "slide-left": "opacity-0 -translate-x-12",
-  "slide-right": "opacity-0 translate-x-12",
-  "scale-up": "opacity-0 scale-90",
-  "stagger-up": "opacity-0 translate-y-6",
+  "slide-left": "opacity-0 -translate-x-6 sm:-translate-x-12",
+  "slide-right": "opacity-0 translate-x-6 sm:translate-x-12",
+  "scale-up": "opacity-0 scale-95 sm:scale-90",
+  "stagger-up": "opacity-0 translate-y-4 sm:translate-y-6",
 };
 
 const ANIMATE_STYLES: Record<Animation, string> = {
@@ -59,12 +60,15 @@ export default function ScrollReveal({
     const el = ref.current;
     if (!el) return;
 
+    // Shorter threshold on mobile for earlier trigger
+    const isMobile = window.innerWidth < 640;
+    const effectiveThreshold = isMobile ? Math.min(threshold, 0.05) : threshold;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Toggle: true when entering, false when leaving
         setVisible(entry.isIntersecting);
       },
-      { threshold, rootMargin: "0px 0px -40px 0px" }
+      { threshold: effectiveThreshold, rootMargin: "0px 0px -20px 0px" }
     );
 
     observer.observe(el);
@@ -88,7 +92,7 @@ export default function ScrollReveal({
   );
 }
 
-// Helper for staggering children
+// Stagger container — wraps each child with staggered animation
 interface StaggerContainerProps {
   children: ReactNode;
   className?: string;
@@ -113,11 +117,14 @@ export function StaggerContainer({
     const el = ref.current;
     if (!el) return;
 
+    const isMobile = window.innerWidth < 640;
+    const effectiveThreshold = isMobile ? Math.min(threshold, 0.05) : threshold;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         setVisible(entry.isIntersecting);
       },
-      { threshold, rootMargin: "0px 0px -20px 0px" }
+      { threshold: effectiveThreshold, rootMargin: "0px 0px -10px 0px" }
     );
 
     observer.observe(el);
@@ -125,19 +132,20 @@ export function StaggerContainer({
   }, [threshold]);
 
   const childArray = Array.isArray(children) ? children : [children];
+  const isMobileStagger = typeof window !== "undefined" && window.innerWidth < 640;
+  const effectiveStagger = isMobileStagger ? Math.min(staggerDelay, 60) : staggerDelay;
 
   return (
     <div ref={ref} className={className}>
       {childArray.map((child, i) => {
         if (!child) return null;
         const easing = EASINGS[animation] || "cubic-bezier(0.16, 1, 0.3, 1)";
-        // When leaving, reverse the stagger order (last in = first out)
-        const enterDelay = i * staggerDelay;
-        const exitDelay = (childArray.length - 1 - i) * (staggerDelay * 0.5);
+        const enterDelay = i * effectiveStagger;
+        const exitDelay = (childArray.length - 1 - i) * (effectiveStagger * 0.4);
         return (
           <div
             key={i}
-            className={`transition-all ${visible ? ANIMATE_STYLES[animation] : INITIAL_STYLES[animation]}`}
+            className={`transition-all overflow-hidden ${visible ? ANIMATE_STYLES[animation] : INITIAL_STYLES[animation]}`}
             style={{
               transitionDuration: `${duration}ms`,
               transitionDelay: `${visible ? enterDelay : exitDelay}ms`,

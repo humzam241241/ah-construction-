@@ -3,6 +3,7 @@ import Script from "next/script";
 import Link from "next/link";
 import { buildMetadata, SITE_URL } from "@/lib/seo/metadata";
 import { buildLocalBusinessSchema, buildServiceSchema } from "@/lib/schema/localBusiness";
+import ScrollReveal, { StaggerContainer } from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = buildMetadata({
   title: "Construction Services in Lahore — Home Building & Concrete Work",
@@ -266,12 +267,18 @@ export default function ServicesPage() {
           {serviceCategories.map((cat) => (
             <div key={cat.category}>
               <div className="mb-8">
-                <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-1">Services</p>
-                <h2 className="text-2xl md:text-3xl font-bold text-[#1a3c5e] mb-2">{cat.category}</h2>
-                <p className="text-gray-600">{cat.description}</p>
+                <ScrollReveal animation="fade-up" duration={500}>
+                  <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-1">Services</p>
+                </ScrollReveal>
+                <ScrollReveal animation="brick-drop" duration={900}>
+                  <h2 className="text-2xl md:text-3xl font-bold text-[#1a3c5e] mb-2">{cat.category}</h2>
+                </ScrollReveal>
+                <ScrollReveal animation="fade-up" delay={200}>
+                  <p className="text-gray-600">{cat.description}</p>
+                </ScrollReveal>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={150} animation="fade-up" duration={700}>
                 {cat.services.map((service) => (
                   <article
                     key={service.slug}
@@ -304,7 +311,7 @@ export default function ServicesPage() {
                     </div>
                   </article>
                 ))}
-              </div>
+              </StaggerContainer>
             </div>
           ))}
         </div>
@@ -313,32 +320,38 @@ export default function ServicesPage() {
       {/* CTA */}
       <section className="py-16 bg-[#1a3c5e]" aria-labelledby="services-cta-heading">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 id="services-cta-heading" className="text-3xl font-bold text-white mb-4">
-            Request a Construction Quote in Lahore
-          </h2>
-          <p className="text-gray-300 mb-8 max-w-xl mx-auto">
-            Tell us about your project and our team will prepare a detailed estimate — free and with no obligation.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors"
-            >
-              Get in Touch
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <a
-              href="tel:+923145500113"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              +92 314 5500113
-            </a>
-          </div>
+          <ScrollReveal animation="brick-drop" duration={900}>
+            <h2 id="services-cta-heading" className="text-3xl font-bold text-white mb-4">
+              Request a Construction Quote in Lahore
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={200}>
+            <p className="text-gray-300 mb-8 max-w-xl mx-auto">
+              Tell us about your project and our team will prepare a detailed estimate — free and with no obligation.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal animation="scale-up" delay={300}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors"
+              >
+                Get in Touch
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+              <a
+                href="tel:+923145500113"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                +92 314 5500113
+              </a>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
     </>

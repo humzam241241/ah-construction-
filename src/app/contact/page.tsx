@@ -3,6 +3,7 @@ import Script from "next/script";
 import Link from "next/link";
 import { buildMetadata, SITE_URL } from "@/lib/seo/metadata";
 import { buildLocalBusinessSchema } from "@/lib/schema/localBusiness";
+import ScrollReveal, { StaggerContainer } from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = buildMetadata({
   title: "Contact A.H Construction — Construction Company in Lahore",
@@ -92,6 +93,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
             {/* Contact Form */}
+            <ScrollReveal animation="slide-left" duration={800}>
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
                 <h2 className="text-2xl font-bold text-[#1a3c5e] mb-2">Send Us a Message</h2>
@@ -101,9 +103,10 @@ export default function ContactPage() {
                 <ContactForm />
               </div>
             </div>
+            </ScrollReveal>
 
             {/* Sidebar: contact info + service areas */}
-            <div className="space-y-6">
+            <StaggerContainer className="space-y-6" staggerDelay={150} animation="slide-right" duration={700}>
               {/* Contact details */}
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h2 className="text-lg font-bold text-[#1a3c5e] mb-5">Contact Information</h2>
@@ -191,7 +194,7 @@ export default function ContactPage() {
                   We mainly serve Punjab and also execute projects across Pakistan.
                 </p>
               </div>
-            </div>
+            </StaggerContainer>
           </div>
         </div>
       </main>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo/metadata";
+import ScrollReveal, { StaggerContainer } from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = buildMetadata({
   title: "Careers at A.H Construction",
@@ -60,19 +61,21 @@ export default function CareersPage() {
 
       <main className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl border border-gray-100 p-8 mb-8">
-            <h2 className="text-2xl font-bold text-[#1a3c5e] mb-3">How to Apply</h2>
-            <p className="text-gray-600 leading-relaxed mb-4">
-              Send your CV and a short introduction to <a className="text-[#1a3c5e] font-semibold hover:text-[#e8a020]" href="mailto:ahc_786@yahoo.com">ahc_786@yahoo.com</a>.
-              Please include your role of interest and preferred location in the subject line.
-            </p>
-            <p className="text-sm text-gray-500">
-              You can also call <a className="font-semibold text-[#1a3c5e] hover:text-[#e8a020]" href="tel:+924235299722">042-35299722</a> or{" "}
-              <a className="font-semibold text-[#1a3c5e] hover:text-[#e8a020]" href="tel:+923145500113">0314-5500113</a> for hiring queries.
-            </p>
-          </div>
+          <ScrollReveal animation="fade-up">
+            <div className="bg-white rounded-2xl border border-gray-100 p-8 mb-8">
+              <h2 className="text-2xl font-bold text-[#1a3c5e] mb-3">How to Apply</h2>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Send your CV and a short introduction to <a className="text-[#1a3c5e] font-semibold hover:text-[#e8a020]" href="mailto:ahc_786@yahoo.com">ahc_786@yahoo.com</a>.
+                Please include your role of interest and preferred location in the subject line.
+              </p>
+              <p className="text-sm text-gray-500">
+                You can also call <a className="font-semibold text-[#1a3c5e] hover:text-[#e8a020]" href="tel:+924235299722">042-35299722</a> or{" "}
+                <a className="font-semibold text-[#1a3c5e] hover:text-[#e8a020]" href="tel:+923145500113">0314-5500113</a> for hiring queries.
+              </p>
+            </div>
+          </ScrollReveal>
 
-          <div className="space-y-5">
+          <StaggerContainer className="space-y-5" staggerDelay={150} animation="slide-left" duration={700}>
             {openings.map((opening) => (
               <article key={opening.title} className="bg-white rounded-xl border border-gray-100 p-6">
                 <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -85,7 +88,7 @@ export default function CareersPage() {
                 <p className="text-gray-600 text-sm leading-relaxed">{opening.summary}</p>
               </article>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </main>
     </>

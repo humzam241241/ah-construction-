@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo/metadata";
+import ScrollReveal, { StaggerContainer } from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = buildMetadata({
   title: "About A.H Construction — Lahore's Trusted Builder Since 2005",
@@ -111,26 +112,32 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-2">Our Story</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1a3c5e] mb-6">
-                Built on Trust, Delivered with Craft
-              </h2>
-              <div className="space-y-4 text-gray-600 leading-relaxed">
-                <p>
-                  A.H Construction was founded in 2005 by Ahmad Hassan with a simple mission: deliver construction projects in Lahore that clients are proud to own for generations. Starting with residential work in DHA and Gulberg, we quickly earned a reputation for transparent pricing, reliable timelines, and uncompromising build quality.
-                </p>
-                <p>
-                  Over two decades, we expanded our capabilities to cover commercial buildings, industrial warehouses, concrete structural work, and complete renovation services. Today, our team of 80+ professionals — engineers, architects, site supervisors, and skilled craftsmen — operates across Punjab and other regions of Pakistan.
-                </p>
-                <p>
-                  With over 500 completed projects and zero structural defect claims, we are Lahore&apos;s construction company of choice for clients who value quality over shortcuts.
-                </p>
-                <p>
-                  We serve government and semi-government departments, NGOs, banks, private companies, and both residential and commercial clients.
-                </p>
-              </div>
+              <ScrollReveal animation="fade-up" duration={500}>
+                <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-2">Our Story</p>
+              </ScrollReveal>
+              <ScrollReveal animation="brick-drop" duration={900}>
+                <h2 className="text-3xl md:text-4xl font-bold text-[#1a3c5e] mb-6">
+                  Built on Trust, Delivered with Craft
+                </h2>
+              </ScrollReveal>
+              <ScrollReveal animation="fade-up" delay={200}>
+                <div className="space-y-4 text-gray-600 leading-relaxed">
+                  <p>
+                    A.H Construction was founded in 2005 by Ahmad Hassan with a simple mission: deliver construction projects in Lahore that clients are proud to own for generations. Starting with residential work in DHA and Gulberg, we quickly earned a reputation for transparent pricing, reliable timelines, and uncompromising build quality.
+                  </p>
+                  <p>
+                    Over two decades, we expanded our capabilities to cover commercial buildings, industrial warehouses, concrete structural work, and complete renovation services. Today, our team of 80+ professionals — engineers, architects, site supervisors, and skilled craftsmen — operates across Punjab and other regions of Pakistan.
+                  </p>
+                  <p>
+                    With over 500 completed projects and zero structural defect claims, we are Lahore&apos;s construction company of choice for clients who value quality over shortcuts.
+                  </p>
+                  <p>
+                    We serve government and semi-government departments, NGOs, banks, private companies, and both residential and commercial clients.
+                  </p>
+                </div>
+              </ScrollReveal>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <StaggerContainer className="grid grid-cols-2 gap-4" animation="scale-up">
               {[
                 { value: "20+", label: "Years in Business" },
                 { value: "500+", label: "Projects Completed" },
@@ -142,7 +149,7 @@ export default function AboutPage() {
                   <div className="text-sm text-gray-600">{stat.label}</div>
                 </div>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
         </div>
       </section>
@@ -151,10 +158,14 @@ export default function AboutPage() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-2">What We Stand For</p>
-            <h2 className="text-3xl font-bold text-[#1a3c5e]">Our Core Values</h2>
+            <ScrollReveal animation="fade-up" duration={500}>
+              <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-2">What We Stand For</p>
+            </ScrollReveal>
+            <ScrollReveal animation="brick-drop" duration={900}>
+              <h2 className="text-3xl font-bold text-[#1a3c5e]">Our Core Values</h2>
+            </ScrollReveal>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" animation="fade-up" staggerDelay={120}>
             {values.map((value) => (
               <div key={value.title} className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm text-center">
                 <div className="w-12 h-12 bg-[#e8a020]/10 rounded-xl flex items-center justify-center text-[#e8a020] mx-auto mb-4">
@@ -164,7 +175,7 @@ export default function AboutPage() {
                 <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
               </div>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -172,12 +183,16 @@ export default function AboutPage() {
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-2">Our Journey</p>
-            <h2 className="text-3xl font-bold text-[#1a3c5e]">Two Decades of Building Lahore</h2>
+            <ScrollReveal animation="fade-up" duration={500}>
+              <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-2">Our Journey</p>
+            </ScrollReveal>
+            <ScrollReveal animation="brick-drop" duration={900}>
+              <h2 className="text-3xl font-bold text-[#1a3c5e]">Two Decades of Building Lahore</h2>
+            </ScrollReveal>
           </div>
           <div className="relative">
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-200" />
-            <div className="space-y-8">
+            <StaggerContainer className="space-y-8" animation="slide-left">
               {milestones.map((milestone) => (
                 <div key={milestone.year} className="relative flex gap-6 pl-16">
                   <div className="absolute left-0 w-16 h-16 flex items-center justify-center">
@@ -191,7 +206,7 @@ export default function AboutPage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
         </div>
       </section>
@@ -200,10 +215,14 @@ export default function AboutPage() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-2">The People</p>
-            <h2 className="text-3xl font-bold text-[#1a3c5e]">Leadership Team</h2>
+            <ScrollReveal animation="fade-up" duration={500}>
+              <p className="text-[#e8a020] font-semibold text-sm uppercase tracking-wider mb-2">The People</p>
+            </ScrollReveal>
+            <ScrollReveal animation="brick-drop" duration={900}>
+              <h2 className="text-3xl font-bold text-[#1a3c5e]">Leadership Team</h2>
+            </ScrollReveal>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" animation="fade-up" staggerDelay={150}>
             {team.map((member) => (
               <div key={member.name} className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
                 <div className="w-14 h-14 bg-[#1a3c5e] rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">
@@ -214,31 +233,37 @@ export default function AboutPage() {
                 <p className="text-gray-600 text-sm leading-relaxed">{member.bio}</p>
               </div>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-16 bg-[#1a3c5e]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Work With Lahore&apos;s Most Trusted Builder</h2>
-          <p className="text-gray-300 mb-8 max-w-xl mx-auto">
-            20+ years of experience, 500+ completed projects, and a team that treats your build like their own. Let&apos;s get started.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors"
-            >
-              Get a Free Quote
-            </Link>
-            <Link
-              href="/services"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
-            >
-              View Our Services
-            </Link>
-          </div>
+          <ScrollReveal animation="brick-drop" duration={900}>
+            <h2 className="text-3xl font-bold text-white mb-4">Work With Lahore&apos;s Most Trusted Builder</h2>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={200}>
+            <p className="text-gray-300 mb-8 max-w-xl mx-auto">
+              20+ years of experience, 500+ completed projects, and a team that treats your build like their own. Let&apos;s get started.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal animation="scale-up" delay={300}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors"
+              >
+                Get a Free Quote
+              </Link>
+              <Link
+                href="/services"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+              >
+                View Our Services
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
     </>
