@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 
 const FRAMES_BASE = "/hero-frames";
-const SCROLL_HEIGHT_VH = 300; // Shorter scroll = faster animation playback
+const SCROLL_HEIGHT_VH = 300;
 
-type TextBlock = 
+type TextBlock =
   | { type: "badge"; text: string }
   | { type: "heading"; text: string }
   | { type: "paragraph"; text: string }
@@ -30,104 +30,144 @@ const TEXT_BLOCKS: TextBlock[] = [
 
 export default function ScrollVideoHero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [frameCount, setFrameCount] = useState(0);
-  const [frameIndex, setFrameIndex] = useState(1);
-  const [textOffset, setTextOffset] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const framesRef = useRef<HTMLImageElement[]>([]);
+  const frameCountRef = useRef(0);
+  const lastFrameRef = useRef(-1);
   const [isLoaded, setIsLoaded] = useState(false);
-  const rafRef = useRef<number>(0);
+  const [showFallback, setShowFallback] = useState(false);
 
+  // Load frame count
   useEffect(() => {
     fetch(`${FRAMES_BASE}/count.json`)
       .then((r) => r.json())
       .then((data: { count: number }) => {
-        setFrameCount(data.count);
+        frameCountRef.current = data.count;
+        framesRef.current = new Array(data.count);
         setIsLoaded(true);
       })
       .catch(() => {
-        setFrameCount(0);
+        setShowFallback(true);
         setIsLoaded(true);
       });
   }, []);
 
-  // Use ref to always have current frameCount in scroll handler
-  const frameCountRef = useRef(frameCount);
-  frameCountRef.current = frameCount;
+  // Draw a frame on the canvas — no React state, pure DOM
+  const drawFrame = useCallback((index: number) => {
+    if (index === lastFrameRef.current) return;
+    const img = framesRef.current[index];
+    const canvas = canvasRef.current;
+    if (!img || !img.complete || !img.naturalWidth || !canvas) return;
+    const ctx = canvas.getContext("2d", { alpha: false });
+    if (!ctx) return;
 
+    // Size canvas to match display size (only when needed)
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth * dpr;
+    const h = canvas.clientHeight * dpr;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+    }
+
+    // Draw with cover-fit
+    const imgRatio = img.naturalWidth / img.naturalHeight;
+    const canvasRatio = w / h;
+    let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
+    if (imgRatio > canvasRatio) {
+      sw = img.naturalHeight * canvasRatio;
+      sx = (img.naturalWidth - sw) / 2;
+    } else {
+      sh = img.naturalWidth / canvasRatio;
+      sy = (img.naturalHeight - sh) / 2;
+    }
+    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+    lastFrameRef.current = index;
+  }, []);
+
+  // Preload frames into Image objects stored in the ref array
   useEffect(() => {
+    if (!isLoaded || showFallback) return;
+    const total = frameCountRef.current;
+    if (total <= 0) return;
+
+    const loadFrame = (i: number) => {
+      const img = new Image();
+      img.src = `${FRAMES_BASE}/frame_${String(i + 1).padStart(4, "0")}.jpg`;
+      img.onload = () => {
+        // Draw first frame as soon as it's ready
+        if (i === 0 && canvasRef.current) drawFrame(0);
+      };
+      framesRef.current[i] = img;
+    };
+
+    // Immediate: first 100
+    const end1 = Math.min(100, total);
+    for (let i = 0; i < end1; i++) loadFrame(i);
+
+    // Staggered batches
+    const batches: [number, number, number][] = [
+      [100, 300, 300],
+      [300, 600, 1000],
+      [600, 1000, 2000],
+      [1000, 1500, 3500],
+      [1500, total, 5500],
+    ];
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    for (const [start, end, delay] of batches) {
+      if (start >= total) break;
+      timers.push(setTimeout(() => {
+        for (let i = start; i < Math.min(end, total); i++) loadFrame(i);
+      }, delay));
+    }
+    return () => timers.forEach(clearTimeout);
+  }, [isLoaded, showFallback, drawFrame]);
+
+  // Scroll handler — directly manipulates canvas + DOM, zero React re-renders
+  useEffect(() => {
+    if (!isLoaded || showFallback) return;
     const section = sectionRef.current;
-    if (!section || frameCount <= 0) return;
+    if (!section) return;
+    const total = frameCountRef.current;
+    if (total <= 0) return;
 
-    const handleScroll = () => {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => {
-        const currentFrameCount = frameCountRef.current;
-        if (currentFrameCount <= 0) return;
+    let ticking = false;
 
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
         const rect = section.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        const sectionHeight = rect.height;
-        const totalScroll = sectionHeight - viewportHeight;
+        const vh = window.innerHeight;
+        const totalScroll = rect.height - vh;
+        if (totalScroll <= 0) return;
 
-        if (totalScroll <= 0) {
-          setFrameIndex(1);
-          setTextOffset(0);
-          return;
+        const scrolled = -rect.top;
+        const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
+
+        // Frame
+        const frameIdx = Math.min(total - 1, Math.max(0, Math.floor(progress * total)));
+        drawFrame(frameIdx);
+
+        // Text offset — direct DOM write, no setState
+        if (textRef.current) {
+          const offset = progress * vh * 2.5;
+          textRef.current.style.transform = `translateY(calc(100vh - ${offset}px))`;
         }
-
-        // rect.top is negative when scrolled past the top of section
-        // When rect.top = 0, we're at the start (progress = 0)
-        // When rect.top = -(sectionHeight - viewportHeight), we're at the end (progress = 1)
-        const scrolledAmount = -rect.top;
-        const progress = Math.max(0, Math.min(1, scrolledAmount / totalScroll));
-
-        // Video frames advance in sync with scroll (full video plays through the scroll)
-        const index = Math.min(currentFrameCount, Math.max(1, Math.ceil(progress * currentFrameCount)));
-        setFrameIndex(index);
-
-        // Text scrolls faster than video (2.5x multiplier for Star Wars effect)
-        const textTravelDistance = viewportHeight * 2.5;
-        setTextOffset(progress * textTravelDistance);
       });
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-    handleScroll();
-    const t = setTimeout(handleScroll, 100);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    onScroll();
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-      clearTimeout(t);
-      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
-  }, [frameCount]);
-
-  // Preload frames in batches for smooth playback
-  useEffect(() => {
-    if (frameCount <= 0) return;
-    const preloadBatch = (start: number, end: number) => {
-      for (let i = start; i <= Math.min(end, frameCount); i++) {
-        const img = new Image();
-        img.src = `${FRAMES_BASE}/frame_${String(i).padStart(4, "0")}.jpg`;
-      }
-    };
-    // Preload first 100 immediately for instant start
-    preloadBatch(1, 100);
-    // Preload rest progressively in larger batches
-    const t1 = setTimeout(() => preloadBatch(101, 300), 500);
-    const t2 = setTimeout(() => preloadBatch(301, 600), 1500);
-    const t3 = setTimeout(() => preloadBatch(601, 1000), 3000);
-    const t4 = setTimeout(() => preloadBatch(1001, 1500), 5000);
-    const t5 = setTimeout(() => preloadBatch(1501, frameCount), 8000);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
-      clearTimeout(t5);
-    };
-  }, [frameCount]);
+  }, [isLoaded, showFallback, drawFrame]);
 
   if (!isLoaded) {
     return (
@@ -137,7 +177,7 @@ export default function ScrollVideoHero() {
     );
   }
 
-  if (frameCount === 0) {
+  if (showFallback) {
     return (
       <section className="relative bg-[#1a3c5e] overflow-hidden" aria-labelledby="hero-heading">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
@@ -168,8 +208,6 @@ export default function ScrollVideoHero() {
     );
   }
 
-  const framePath = `${FRAMES_BASE}/frame_${String(frameIndex).padStart(4, "0")}.jpg`;
-
   return (
     <section
       ref={sectionRef}
@@ -181,32 +219,30 @@ export default function ScrollVideoHero() {
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
         {/* Split screen layout */}
         <div className="flex h-full">
-          {/* Left side: Video frames */}
+          {/* Left side: Canvas for video frames — GPU-accelerated, no img src swaps */}
           <div className="relative w-full lg:w-1/2 h-full bg-[#0a1a2e]">
-            <img
-              src={framePath}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ 
-                willChange: "contents",
-              }}
+            <canvas
+              ref={canvasRef}
+              className="absolute inset-0 w-full h-full"
+              style={{ willChange: "contents" }}
             />
             {/* Gradient overlay for text readability on mobile */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/60 lg:to-transparent pointer-events-none" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
           </div>
 
-          {/* Right side: Vertical scrolling text (no angle) */}
+          {/* Right side: Vertical scrolling text */}
           <div className="absolute inset-0 lg:relative lg:w-1/2 h-full overflow-hidden">
             {/* Dark gradient background for text side */}
             <div className="absolute inset-0 bg-gradient-to-l from-[#0a1a2e] via-[#0a1a2e]/95 to-transparent lg:from-[#0a1a2e] lg:via-[#0a1a2e] lg:to-[#0a1a2e]" />
-            
-            {/* Scrolling text container - straight vertical, no perspective */}
+
+            {/* Scrolling text container */}
             <div className="relative h-full overflow-hidden">
               <div
+                ref={textRef}
                 className="absolute w-full px-6 sm:px-8 lg:px-12 pt-24"
                 style={{
-                  transform: `translateY(calc(100vh - ${textOffset}px))`,
+                  transform: "translateY(100vh)",
                   willChange: "transform",
                 }}
               >
