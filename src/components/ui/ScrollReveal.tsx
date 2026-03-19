@@ -40,7 +40,6 @@ const ANIMATE_STYLES: Record<Animation, string> = {
   "stagger-up": "opacity-100 translate-y-0",
 };
 
-// Brick-drop uses a custom cubic-bezier that mimics a heavy object falling and bouncing
 const EASINGS: Partial<Record<Animation, string>> = {
   "brick-drop": "cubic-bezier(0.34, 1.56, 0.64, 1)",
 };
@@ -62,10 +61,8 @@ export default function ScrollReveal({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(el);
-        }
+        // Toggle: true when entering, false when leaving
+        setVisible(entry.isIntersecting);
       },
       { threshold, rootMargin: "0px 0px -40px 0px" }
     );
@@ -82,7 +79,7 @@ export default function ScrollReveal({
       className={`transition-all ${visible ? ANIMATE_STYLES[animation] : INITIAL_STYLES[animation]} ${className}`}
       style={{
         transitionDuration: `${duration}ms`,
-        transitionDelay: `${delay}ms`,
+        transitionDelay: visible ? `${delay}ms` : "0ms",
         transitionTimingFunction: easing,
       }}
     >
@@ -118,10 +115,7 @@ export function StaggerContainer({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(el);
-        }
+        setVisible(entry.isIntersecting);
       },
       { threshold, rootMargin: "0px 0px -20px 0px" }
     );
@@ -130,27 +124,30 @@ export function StaggerContainer({
     return () => observer.disconnect();
   }, [threshold]);
 
+  const childArray = Array.isArray(children) ? children : [children];
+
   return (
     <div ref={ref} className={className}>
-      {Array.isArray(children)
-        ? children.map((child, i) => {
-            if (!child) return null;
-            const easing = EASINGS[animation] || "cubic-bezier(0.16, 1, 0.3, 1)";
-            return (
-              <div
-                key={i}
-                className={`transition-all ${visible ? ANIMATE_STYLES[animation] : INITIAL_STYLES[animation]}`}
-                style={{
-                  transitionDuration: `${duration}ms`,
-                  transitionDelay: `${visible ? i * staggerDelay : 0}ms`,
-                  transitionTimingFunction: easing,
-                }}
-              >
-                {child}
-              </div>
-            );
-          })
-        : children}
+      {childArray.map((child, i) => {
+        if (!child) return null;
+        const easing = EASINGS[animation] || "cubic-bezier(0.16, 1, 0.3, 1)";
+        // When leaving, reverse the stagger order (last in = first out)
+        const enterDelay = i * staggerDelay;
+        const exitDelay = (childArray.length - 1 - i) * (staggerDelay * 0.5);
+        return (
+          <div
+            key={i}
+            className={`transition-all ${visible ? ANIMATE_STYLES[animation] : INITIAL_STYLES[animation]}`}
+            style={{
+              transitionDuration: `${duration}ms`,
+              transitionDelay: `${visible ? enterDelay : exitDelay}ms`,
+              transitionTimingFunction: easing,
+            }}
+          >
+            {child}
+          </div>
+        );
+      })}
     </div>
   );
 }
