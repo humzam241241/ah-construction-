@@ -145,7 +145,7 @@ export function StaggerContainer({
         return (
           <div
             key={i}
-            className={`transition-all overflow-hidden ${visible ? ANIMATE_STYLES[animation] : INITIAL_STYLES[animation]}`}
+            className={`transition-all ${visible ? ANIMATE_STYLES[animation] : INITIAL_STYLES[animation]}`}
             style={{
               transitionDuration: `${duration}ms`,
               transitionDelay: `${visible ? enterDelay : exitDelay}ms`,
