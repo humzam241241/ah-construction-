@@ -34,7 +34,51 @@ export default function ScrollVideoHero() {
   const [isReady, setIsReady] = useState(false);
   const [showFallback, setShowFallback] = useState(false);
 
-  // Smooth lerp animation loop
+  // Text scroll — runs immediately, no dependency on video
+  useEffect(() => {
+    if (showFallback) return;
+    const section = sectionRef.current;
+    if (!section) return;
+
+    let currentTextOffset = 0;
+    let targetTextOffset = 0;
+    let running = true;
+
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+    const tick = () => {
+      if (!running) return;
+      currentTextOffset = lerp(currentTextOffset, targetTextOffset, 0.12);
+      if (textRef.current) {
+        textRef.current.style.transform = `translateY(calc(100vh - ${currentTextOffset}px))`;
+      }
+      requestAnimationFrame(tick);
+    };
+
+    const onScroll = () => {
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const totalScroll = rect.height - vh;
+      if (totalScroll <= 0) return;
+      const scrolled = -rect.top;
+      const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
+      targetTextOffset = progress * vh * 5;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    onScroll();
+    currentTextOffset = targetTextOffset;
+    requestAnimationFrame(tick);
+
+    return () => {
+      running = false;
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [showFallback]);
+
+  // Video scrub — only runs once video metadata is loaded
   useEffect(() => {
     if (!isReady || showFallback) return;
     const video = videoRef.current;
@@ -44,57 +88,36 @@ export default function ScrollVideoHero() {
     const duration = video.duration;
     if (!duration || isNaN(duration)) return;
 
-    let currentTime = 0; // smoothed value
-    let targetTime = 0;  // raw scroll target
-    let currentTextOffset = 0;
-    let targetTextOffset = 0;
+    let currentTime = 0;
+    let targetTime = 0;
     let running = true;
-
-    const LERP_SPEED = 0.12; // smoothing factor (0 = frozen, 1 = instant)
 
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-    // Continuous animation loop — runs every frame, lerps toward target
     const tick = () => {
       if (!running) return;
-
-      // Lerp toward target
-      currentTime = lerp(currentTime, targetTime, LERP_SPEED);
-      currentTextOffset = lerp(currentTextOffset, targetTextOffset, LERP_SPEED);
-
-      // Only seek if meaningfully different (avoid micro-seeks)
+      currentTime = lerp(currentTime, targetTime, 0.12);
       if (Math.abs(currentTime - video.currentTime) > 0.01) {
         video.currentTime = currentTime;
       }
-
-      // Update text position
-      if (textRef.current) {
-        textRef.current.style.transform = `translateY(calc(100vh - ${currentTextOffset}px))`;
-      }
-
       requestAnimationFrame(tick);
     };
 
-    // Scroll handler — just updates targets, doesn't touch DOM
     const onScroll = () => {
       const rect = section.getBoundingClientRect();
       const vh = window.innerHeight;
       const totalScroll = rect.height - vh;
       if (totalScroll <= 0) return;
-
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
-
       targetTime = progress * duration;
-      targetTextOffset = progress * vh * 5;
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
-    onScroll(); // set initial targets
-    currentTime = targetTime; // snap on first load
-    currentTextOffset = targetTextOffset;
-    if (video) video.currentTime = currentTime;
+    onScroll();
+    currentTime = targetTime;
+    video.currentTime = currentTime;
     requestAnimationFrame(tick);
 
     return () => {
