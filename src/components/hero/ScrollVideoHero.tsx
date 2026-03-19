@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-const SCROLL_HEIGHT_VH = 500; // More scroll room = smoother feel
+const SCROLL_HEIGHT_VH = 800; // Extra tall for generous text spacing
 
 type TextBlock =
   | { type: "badge"; text: string }
@@ -86,7 +86,7 @@ export default function ScrollVideoHero() {
       const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
 
       targetTime = progress * duration;
-      targetTextOffset = progress * vh * 2.5;
+      targetTextOffset = progress * vh * 5;
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -181,11 +181,11 @@ export default function ScrollVideoHero() {
                 <div className="max-w-lg mx-auto space-y-0">
                   {TEXT_BLOCKS.map((block, i) => {
                     if (block.type === "spacer") {
-                      return <div key={i} className="h-40 lg:h-52" />;
+                      return <div key={i} className="h-32 lg:h-40" />;
                     }
                     if (block.type === "badge") {
                       return (
-                        <div key={i} className="flex justify-center lg:justify-start mb-24">
+                        <div key={i} className="flex justify-center lg:justify-start mb-12">
                           <div className="inline-flex items-center gap-2 bg-[#e8a020]/20 border border-[#e8a020]/40 rounded-full px-5 py-2.5">
                             <span className="w-2 h-2 bg-[#e8a020] rounded-full animate-pulse" />
                             <span className="text-[#e8a020] text-sm font-semibold tracking-wide">{block.text}</span>
@@ -197,7 +197,7 @@ export default function ScrollVideoHero() {
                       return (
                         <h2
                           key={i}
-                          className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight text-center lg:text-left mt-44 mb-8"
+                          className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight text-center lg:text-left mt-28 mb-4"
                           style={{ textShadow: "0 4px 30px rgba(0,0,0,0.7)" }}
                         >
                           {block.text.includes("Skyline") ? (
@@ -224,7 +224,7 @@ export default function ScrollVideoHero() {
                       return (
                         <p
                           key={i}
-                          className="text-lg sm:text-xl lg:text-2xl text-gray-300 leading-relaxed text-center lg:text-left mb-8"
+                          className="text-lg sm:text-xl lg:text-2xl text-gray-300 leading-relaxed text-center lg:text-left mb-4"
                           style={{ textShadow: "0 2px 15px rgba(0,0,0,0.6)" }}
                         >
                           {block.text}
@@ -233,7 +233,7 @@ export default function ScrollVideoHero() {
                     }
                     if (block.type === "cta") {
                       return (
-                        <div key={i} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-44">
+                        <div key={i} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-28">
                           <Link
                             href="/contact"
                             className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#e8a020] text-white font-semibold rounded-lg hover:bg-amber-500 transition-colors shadow-xl shadow-[#e8a020]/40"
