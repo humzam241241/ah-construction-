@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# hero frames (replaced by hero-scroll.mp4 video)
+/public/hero-frames/
