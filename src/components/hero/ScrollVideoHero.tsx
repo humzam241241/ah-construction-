@@ -165,8 +165,8 @@ export default function ScrollVideoHero() {
 
           {/* Right side: Vertical scrolling text */}
           <div className="absolute inset-0 lg:relative lg:w-1/2 h-full overflow-hidden">
-            {/* Dark gradient background for text side */}
-            <div className="absolute inset-0 bg-gradient-to-l from-[#0a1a2e] via-[#0a1a2e]/95 to-transparent lg:from-[#0a1a2e] lg:via-[#0a1a2e] lg:to-[#0a1a2e]" />
+            {/* Dark overlay — semi-transparent on mobile so video shows through, solid on desktop */}
+            <div className="absolute inset-0 bg-black/50 lg:bg-gradient-to-l lg:from-[#0a1a2e] lg:via-[#0a1a2e] lg:to-[#0a1a2e]" />
 
             {/* Scrolling text container */}
             <div className="relative h-full overflow-hidden">
