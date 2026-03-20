@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, cloneElement, isValidElement, type ReactNode, type ReactElement } from "react";
 
 type Animation =
   | "brick-drop"
@@ -32,13 +32,13 @@ const INITIAL_STYLES: Record<Animation, string> = {
 };
 
 const ANIMATE_STYLES: Record<Animation, string> = {
-  "brick-drop": "opacity-100 translate-y-0 scale-100",
-  "fade-up": "opacity-100 translate-y-0",
+  "brick-drop": "opacity-100",
+  "fade-up": "opacity-100",
   "fade-in": "opacity-100",
-  "slide-left": "opacity-100 translate-x-0",
-  "slide-right": "opacity-100 translate-x-0",
-  "scale-up": "opacity-100 scale-100",
-  "stagger-up": "opacity-100 translate-y-0",
+  "slide-left": "opacity-100",
+  "slide-right": "opacity-100",
+  "scale-up": "opacity-100",
+  "stagger-up": "opacity-100",
 };
 
 const EASINGS: Partial<Record<Animation, string>> = {
@@ -142,16 +142,26 @@ export function StaggerContainer({
         const easing = EASINGS[animation] || "cubic-bezier(0.16, 1, 0.3, 1)";
         const enterDelay = i * effectiveStagger;
         const exitDelay = (childArray.length - 1 - i) * (effectiveStagger * 0.4);
+        const animClass = `transition-all ${visible ? ANIMATE_STYLES[animation] : INITIAL_STYLES[animation]}`;
+        const animStyle = {
+          transitionDuration: `${duration}ms`,
+          transitionDelay: `${visible ? enterDelay : exitDelay}ms`,
+          transitionTimingFunction: easing,
+        };
+
+        // Apply styles directly to valid React elements to avoid wrapper divs
+        if (isValidElement(child)) {
+          const existing = (child as ReactElement<{ className?: string; style?: Record<string, string> }>).props;
+          return cloneElement(child as ReactElement<{ className?: string; style?: Record<string, string>; key?: React.Key }>, {
+            key: i,
+            className: `${existing.className || ""} ${animClass}`.trim(),
+            style: { ...existing.style, ...animStyle },
+          });
+        }
+
+        // Fallback: wrap non-element children
         return (
-          <div
-            key={i}
-            className={`transition-all ${visible ? ANIMATE_STYLES[animation] : INITIAL_STYLES[animation]}`}
-            style={{
-              transitionDuration: `${duration}ms`,
-              transitionDelay: `${visible ? enterDelay : exitDelay}ms`,
-              transitionTimingFunction: easing,
-            }}
-          >
+          <div key={i} className={animClass} style={animStyle}>
             {child}
           </div>
         );
